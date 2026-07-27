@@ -1,946 +1,646 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chirox Client | Dominate the Field</title>
-    
+    <title>CS2 Command Generator - Apple Liquid Glass Edition</title>
     <style>
-        :root {
-            --bg-darker: #050a14;
-            --bg-lighter: #0a192f;
-            --bg-card: #0a192f;
-            --bg-card-hover: #0a192f;
-            
-            --blue-light: #00d4ff;
-            --blue-light-glow: rgba(0, 212, 255, 0.4);
-            --blue-dark: #0a254d;
-            
-            --border-thin: rgba(0, 212, 255, 0.1);
-            --border-hover: #00d4ff;
-            
-            --text-main: #e0e6ed;
-            --text-dim: #94a3b8;
-            --nav-height: 80px;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 25px rgba(0, 212, 255, 0.4); }
-            50% { box-shadow: 0 0 50px rgba(0, 212, 255, 0.7); }
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: var(--nav-height);
-            background-color: var(--bg-darker);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
         body {
-            background-color: var(--bg-darker);
-            color: var(--text-main);
-            overflow-x: hidden;
-            line-height: 1.6;
-        }
-
-        .text-shimmer {
-            background: linear-gradient(90deg, var(--blue-dark) 0%, var(--blue-light) 50%, var(--blue-dark) 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shimmer 4s linear infinite;
-            display: inline-block;
-        }
-
-        .scroll-animate {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: transform, opacity;
-        }
-
-        .scroll-animate.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .section-header-block {
-            text-align: center;
-            padding: 6rem 10% 3rem;
-        }
-
-        .section-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            color: var(--blue-light);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .section-label::before {
-            content: '';
-            width: 30px;
-            height: 1px;
-            background-color: var(--blue-light);
-        }
-
-        .section-title-large {
-            font-size: 2.5rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #fff;
-        }
-
-        .mouse-glow {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            background: radial-gradient(
-                600px circle at var(--x, 0) var(--y, 0), 
-                rgba(0, 212, 255, 0.07), 
-                transparent 40%
-            );
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10%;
-            height: var(--nav-height);
-            background: rgba(5, 10, 20, 0.9);
-            backdrop-filter: blur(15px);
-            position: fixed;
-            top: 0; left: 0; width: 100%;
-            z-index: 10000;
-            border-bottom: 1px solid var(--border-thin);
-            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: var(--blue-light);
-            text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
-            text-decoration: none;
-            transition: all 0.25s ease;
-        }
-
-        .logo:hover { filter: brightness(1.1); }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-main);
-            font-weight: 500;
-            transition: all 0.25s ease;
-        }
-
-        .nav-links a:hover {
-            color: var(--blue-light);
-            filter: brightness(1.1);
-        }
-
-        .discord-btn {
-            background: var(--blue-light);
-            color: var(--bg-darker) !important;
-            padding: 8px 18px;
-            border-radius: 50px;
-            font-weight: 800;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            transition: all 0.25s ease !important;
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
-        }
-
-        .discord-btn:hover {
-            background: #ffffff;
-            box-shadow: 0 0 25px rgba(0, 212, 255, 0.6);
-            transform: translateY(-1px);
-        }
-
-        .credits-nav-btn {
-            color: var(--blue-light) !important;
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            padding: 7px 16px;
-            border-radius: 50px;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            transition: all 0.25s ease !important;
-            background: rgba(0, 212, 255, 0.05);
-        }
-
-        .credits-nav-btn:hover {
-            background: rgba(0, 212, 255, 0.15);
-            border-color: var(--blue-light);
-            box-shadow: 0 0 25px rgba(0, 212, 255, 0.4);
-            transform: translateY(-1px);
-        }
-
-        .hero {
-            height: 100vh;
+            margin: 0;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle at center, var(--blue-dark) 0%, var(--bg-darker) 100%);
-            padding: 0 8%;
-            position: relative;
-            z-index: 2;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: 
-                linear-gradient(rgba(0, 212, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 212, 255, 0.03) 1px, transparent 1px);
-            background-size: 60px 60px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+            background-image: url('https://i.imgur.com/9UcR5sU.jpeg');
+            background-size: cover;
             background-position: center;
-            mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
-            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 80%);
-            pointer-events: none;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #ffffff;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        #hero-ambient-particles {
+        body::before {
+            content: '';
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
-            will-change: transform;
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(135deg, rgba(52, 199, 89, 0.3), rgba(0, 122, 255, 0.3), rgba(255, 45, 85, 0.2));
+            filter: blur(120px);
+            border-radius: 50%;
+            z-index: -1;
+            animation: liquidLoop 12s linear infinite;
         }
 
-        .hero-split-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 1400px;
-            gap: 60px;
-            position: relative;
-            z-index: 2;
+        @keyframes liquidLoop {
+            0% { top: -10%; left: -10%; transform: scale(1) rotate(0deg); }
+            33% { top: 40%; left: 60%; transform: scale(1.3) rotate(120deg); }
+            66% { top: 60%; left: 10%; transform: scale(0.9) rotate(240deg); }
+            100% { top: -10%; left: -10%; transform: scale(1) rotate(360deg); }
         }
 
-        .hero-left-showcase {
-            flex: 1.3;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            perspective: 1500px;
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-12px); }
+            100% { transform: translateY(0px); }
         }
 
-        .hero-showcase-wrapper {
-            position: relative;
-            transform: rotateX(12deg) rotateY(20deg) scale3d(1, 1, 1);
-            transition: transform 0.25s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
-            will-change: transform, box-shadow;
-            transform-style: preserve-3d;
-            width: 100%;
-            max-width: 620px;
-            border-radius: 24px;
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(40px) saturate(200%);
+            -webkit-backdrop-filter: blur(40px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.4);
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 32px;
+            padding: 45px;
+            width: 90%;
+            max-width: 650px;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                inset 0 0 25px rgba(255, 255, 255, 0.05);
+            margin: 30px;
+            animation: float 8s ease-in-out infinite;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .hero-showcase-img {
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 24px;
-            border: 1px solid rgba(0, 212, 255, 0.15);
-            box-shadow: -20px 20px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(0, 212, 255, 0.15);
-            transition: border-color 0.25s ease, filter 0.25s ease;
-        }
-
-        .hero-showcase-wrapper:hover .hero-showcase-img {
-            border-color: rgba(0, 212, 255, 0.5);
-            filter: brightness(1.05);
-        }
-
-        .hero-right-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            text-align: left;
+        .glass-panel:hover {
+            box-shadow: 
+                0 40px 80px rgba(0, 0, 0, 0.5),
+                inset 0 0 35px rgba(255, 255, 255, 0.1);
         }
 
         h1 {
-            font-size: clamp(2.5rem, 5vw, 4.5rem);
-            margin-bottom: 1rem;
-            background: linear-gradient(to bottom, #fff, var(--blue-light));
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 35px;
+            font-weight: 600;
+            font-size: 32px;
+            letter-spacing: -0.5px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            background: linear-gradient(135deg, #ffffff 0%, #a8a8a8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            z-index: 2;
         }
 
-        .hero p {
-            font-size: 1.15rem;
-            color: var(--text-dim);
-            max-width: 650px;
-            margin-bottom: 1.5rem;
-            animation: fadeInUp 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            z-index: 2;
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 35px;
         }
 
-        .version-badge {
-            color: var(--blue-light);
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 1.5rem;
-            animation: fadeInUp 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            z-index: 2;
-        }
-
-        .btn-container {
+        .form-group {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
-            gap: 15px;
             position: relative;
+        }
+
+        label {
+            font-size: 13px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .segmented-control {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .segmented-control input {
+            display: none;
+        }
+
+        .segmented-control label {
+            flex: 1;
+            text-align: center;
+            padding: 10px 6px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            margin-bottom: 0;
+            text-transform: none;
             z-index: 2;
-            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .primary-btn {
-            background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-light) 50%, var(--blue-dark) 100%);
-            background-size: 200% auto;
+        .segmented-control input:checked + label {
             color: #ffffff;
-            padding: 14px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 900;
-            font-size: 1.2rem;
-            text-transform: uppercase;
-            display: inline-flex;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .segmented-control label:hover {
+            color: #ffffff;
+        }
+
+        .slider-container {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 12px 18px;
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 44px;
+            box-sizing: border-box;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            animation: fadeInUp 1.6s cubic-bezier(0.16, 1, 0.3, 1), pulseGlow 3s infinite ease-in-out;
-            transition: all 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-            border: 1px solid rgba(0, 212, 255, 0.3);
-            will-change: transform, box-shadow;
+            margin-bottom: 4px;
         }
 
-        .primary-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 40px var(--blue-light-glow);
-            background-position: right center;
-            filter: brightness(1.2);
+        .slider-header span {
+            font-size: 15px;
+            font-weight: 600;
+            color: #fff;
         }
 
-        .primary-btn img { height: 32px; width: auto; }
-
-        .secondary-btn {
-            color: #4db8ff; 
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-decoration: none;
-            animation: fadeInUp 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            padding: 8px 20px;
-            border: 1px solid transparent;
-            will-change: transform, box-shadow;
-            margin-left: 10px;
+        input[type="range"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
         }
 
-        .secondary-btn:hover {
-            transform: translateY(-2px);
-            border-color: rgba(0, 212, 255, 0.4);
-            box-shadow: 0 0 25px rgba(0, 212, 255, 0.2);
-            background: rgba(0, 212, 255, 0.05);
-            border-radius: 4px;
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            transition: transform 0.2s ease, background-color 0.2s ease;
         }
 
-        .content-section-alt {
-            background-color: var(--bg-lighter);
-            border-top: 1px solid var(--border-thin);
-            border-bottom: 1px solid var(--border-thin);
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #34c759;
         }
 
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            padding: 0 10% 5rem;
+        hr {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            margin: 35px 0;
         }
 
-        .card {
-            background: var(--bg-card);
-            padding: 2.5rem;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 212, 255, 0.05);
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 16px 20px;
+            border-radius: 18px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .checkbox-container:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+
+        .checkbox-container label {
+            margin-bottom: 0;
+            font-size: 15px;
+            color: #fff;
+            text-transform: none;
+            letter-spacing: 0;
+            cursor: pointer;
+        }
+
+        .toggle-switch {
             position: relative;
-            transition: box-shadow 0.1s ease-out, transform 0.1s ease-out, border-color 0.3s ease; 
-            will-change: transform, box-shadow;
-            transform-style: preserve-3d;
+            width: 52px;
+            height: 30px;
+            appearance: none;
+            -webkit-appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            outline: none;
+            cursor: pointer;
+            transition: background 0.4s ease;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        .card:hover {
-            border-color: var(--border-hover);
-        }
-
-        .card h3 { color: var(--blue-light); margin-bottom: 15px; }
-        .card ul { list-style: none; color: var(--text-dim); }
-        .card ul li { margin-bottom: 8px; padding-left: 15px; position: relative; }
-        .card ul li::before { content: "»"; color: var(--blue-light); position: absolute; left: 0; font-weight: bold; }
-
-        .card::after {
+        .toggle-switch::after {
             content: '';
             position: absolute;
-            inset: 0;
-            border-radius: 20px;
-            background: radial-gradient(circle at 50% 0%, rgba(0, 212, 255, 0.2), transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
+            top: 2px;
+            left: 2px;
+            width: 26px;
+            height: 26px;
+            background: #ffffff;
+            border-radius: 50%;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
 
-        .card:hover::after { opacity: 1; }
-
-        #team {
-            text-align: center;
-            padding: 6rem 10% 2rem;
+        .toggle-switch:checked {
+            background: #34c759;
         }
 
-        .team-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            max-width: 440px;
-            margin: 2.5rem auto 0;
+        .toggle-switch:checked::after {
+            transform: translateX(22px);
         }
 
-        .credits-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            background: rgba(0, 212, 255, 0.02);
-            border: 1px solid var(--border-thin);
-            padding: 1.2rem 3rem;
+        .output-group {
+            margin-top: 40px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 90px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
-            backdrop-filter: blur(5px);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #4cd964;
+            padding: 18px;
+            font-family: 'SF Mono', Consolas, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: none;
+            box-sizing: border-box;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.3);
+            transition: border-color 0.3s ease;
         }
 
-        .credits-container:hover {
-            border-color: var(--blue-light);
-            background: rgba(0, 212, 255, 0.06);
-            box-shadow: 0 0 35px rgba(0, 212, 255, 0.25);
+        textarea:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        button {
+            width: 100%;
+            padding: 18px;
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.7s ease;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px rgba(255,255,255,0.1);
             transform: translateY(-2px);
         }
 
-        .credit-role {
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            color: var(--text-dim);
-            transition: color 0.3s ease;
-            width: 110px;
-            text-align: right;
+        button:hover::before {
+            left: 150%;
         }
 
-        .credits-container:hover .credit-role {
-            color: var(--blue-light);
-        }
-
-        .credit-user {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 800;
-            color: #fff;
-            font-size: 1.15rem;
-            text-shadow: 0 0 0px transparent;
-            transition: text-shadow 0.3s ease;
-            flex: 1;
-            justify-content: flex-start;
-        }
-
-        .credits-container:hover .credit-user {
-            text-shadow: 0 0 15px rgba(0, 212, 255, 0.6);
-        }
-
-        .credit-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            border: 1px solid rgba(0, 212, 255, 0.2);
-            background-color: var(--bg-darker);
-            transition: all 0.3s ease;
-        }
-
-        .credits-container:hover .credit-avatar {
-            border-color: var(--blue-light);
-            transform: scale(1.1);
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
-        }
-
-        #about {
-            text-align: center;
-            padding: 4rem 10% 6rem;
-        }
-
-        #about p {
-            max-width: 700px; 
-            margin: 0 auto;
-            color: var(--text-dim); 
-            line-height: 1.8; 
-            font-size: 1.1rem;
-        }
-
-        #interactive-footer {
-            position: relative;
-            height: 300px;
-            width: 100%;
-            background: linear-gradient(to bottom, transparent, var(--bg-darker)), 
-                        radial-gradient(ellipse at bottom, rgba(0, 212, 255, 0.15) 0%, transparent 75%);
-            overflow: hidden;
-            border-top: 1px solid var(--border-thin);
-        }
-
-        #particle-canvas {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem 2rem;
-            color: var(--text-dim);
-            position: relative;
-            z-index: 10;
-            background-color: #03070d;
-            border-top: 1px solid var(--border-thin);
-            box-shadow: 0 -10px 40px rgba(0, 212, 255, 0.08);
-        }
-
-        @media (max-width: 968px) {
-            .hero-split-container {
-                flex-direction: column;
-                text-align: center;
-                gap: 40px;
-                padding-top: var(--nav-height);
-            }
-            .hero-right-content {
-                align-items: center;
-                text-align: center;
-            }
-            .btn-container {
-                align-items: center;
-            }
-            .secondary-btn {
-                margin-left: 0;
-            }
+        button:active {
+            transform: scale(0.97) translateY(0);
         }
     </style>
 </head>
 <body>
 
-    <div class="mouse-glow"></div>
+<div class="glass-panel">
+    <h1>CS2 Command Generator</h1>
 
-    <nav>
-        <a href="#" class="logo">CHIROX</a>
-        <ul class="nav-links">
-            <li><a href="#">Home</a></li>
-            <li><a href="#features-target">Features</a></li>
-            <li><a href="https://discord.gg/SMrHHfcD3m" target="_blank" class="discord-btn">Discord</a></li>
-            <li><a href="#team" class="credits-nav-btn">Team</a></li>
-            <li><a href="#about">About</a></li>
-        </ul>
-    </nav>
-
-    <section class="hero">
-        <canvas id="hero-ambient-particles"></canvas>
-        
-        <div class="hero-split-container">
-            <div class="hero-left-showcase">
-                <div class="hero-showcase-wrapper">
-                    <img src="https://i.imgur.com/J0X7zjt.png" alt="Chirox Interface" class="hero-showcase-img">
-                </div>
-            </div>
-            
-            <div class="hero-right-content">
-                <h1>CHIROX <span class="text-shimmer">CLIENT</span></h1>
-                <p>The ultimate PvP client. Maximize your performance, optimize your hits, and dominate every match with Chirox Client.</p>
-                <div class="version-badge">Next-Gen Performance for Minecraft 1.21.11</div>
+    <div class="settings-grid">
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Game Mode</label>
+            <div class="segmented-control">
+                <input type="radio" id="mode_pvp" name="game_mode" value="pvp" onchange="toggleMode(); generate();">
+                <label for="mode_pvp">Player vs Player (Free / 1v1)</label>
                 
-                <div class="btn-container">
-                    <a href="https://github.com/AfkChickens/Chirox-Client/releases/download/v4/chirox-client-pvp-1.21.11.jar" class="primary-btn">
-                        <img src="https://i.imgur.com/5YWANgq.png" alt="Logo">
-                        Download 1.21.11
-                    </a>
-                    <a href="https://github.com/AfkChickens/Chirox-Client/releases/download/v1/chirox-client-pvp-1.21.4.jar" class="secondary-btn">
-                        Download 1.21.4
-                    </a>
+                <input type="radio" id="mode_pve" name="game_mode" value="pve" checked onchange="toggleMode(); generate();">
+                <label for="mode_pve">Player vs Bots (Training)</label>
+            </div>
+        </div>
+
+        <div class="form-group" id="group_team" style="grid-column: span 2;">
+            <label>Enemy Bots Team</label>
+            <div class="segmented-control">
+                <input type="radio" id="team_ct" name="bot_team" value="CT" onchange="generate()">
+                <label for="team_ct">Bots are CT (You are T)</label>
+                
+                <input type="radio" id="team_t" name="bot_team" value="T" checked onchange="generate()">
+                <label for="team_t">Bots are T (You are CT)</label>
+            </div>
+        </div>
+
+        <div class="form-group" id="group_bots">
+            <label>Bot Count</label>
+            <div class="slider-container">
+                <div class="slider-header">
+                    <span>Amount</span>
+                    <span id="bot_count_val" style="color: #4cd964; font-variant-numeric: tabular-nums;">40</span>
                 </div>
+                <input type="range" id="bot_count" min="1" max="40" value="40" oninput="updateSlider(); generate();">
             </div>
         </div>
-    </section>
 
-    <div id="features-target" class="content-section-alt scroll-animate">
-        <div class="section-header-block">
-            <div class="section-label">PvP Modules</div>
-            <h2 class="section-title-large">Operational Utilities</h2>
+        <div class="form-group" id="group_diff">
+            <label>Difficulty</label>
+            <div class="segmented-control">
+                <input type="radio" id="diff_easy" name="bot_diff" value="0" onchange="generate()">
+                <label for="diff_easy">Easy</label>
+                
+                <input type="radio" id="diff_normal" name="bot_diff" value="1" onchange="generate()">
+                <label for="diff_normal">Normal</label>
+                
+                <input type="radio" id="diff_hard" name="bot_diff" value="2" onchange="generate()">
+                <label for="diff_hard">Hard</label>
+                
+                <input type="radio" id="diff_expert" name="bot_diff" value="3" checked onchange="generate()">
+                <label for="diff_expert">Expert</label>
+            </div>
         </div>
 
-        <section class="features">
-            <div class="card">
-                <h3>Visual Advantage</h3>
-                <ul>
-                    <li>Optimized Cube Particles</li>
-                    <li>Motion Blur & Ragdolls</li>
-                    <li>Persistent Low Fire</li>
-                    <li>Custom Item Physics</li>
-                    <li>Fullbright & Smooth Zoom</li>
-                </ul>
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Chicken Count (sv_minimum_desired_chicken_count)</label>
+            <div class="slider-container">
+                <div class="slider-header">
+                    <span>Chickens</span>
+                    <span id="chicken_count_val" style="color: #4cd964; font-variant-numeric: tabular-nums;">10</span>
+                </div>
+                <input type="range" id="chicken_count" min="10" max="200" value="10" oninput="updateChickenSlider(); generate();">
             </div>
+        </div>
 
-            <div class="card">
-                <h3>Combat Intelligence</h3>
-                <ul>
-                    <li>Precision Reach Display</li>
-                    <li>Dynamic CPS & Keystrokes</li>
-                    <li>Armor Durability HUD</li>
-                    <li>Potion Effect Monitor</li>
-                    <li>Ultra-Low Input Latency</li>
-                </ul>
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Ammunition</label>
+            <div class="segmented-control">
+                <input type="radio" id="ammo_normal" name="ammo" value="0" onchange="generate()">
+                <label for="ammo_normal">Normal</label>
+                
+                <input type="radio" id="ammo_inf" name="ammo" value="1" checked onchange="generate()">
+                <label for="ammo_inf">Infinite (No Reload)</label>
+                
+                <input type="radio" id="ammo_inf_reload" name="ammo" value="2" onchange="generate()">
+                <label for="ammo_inf_reload">Infinite (With Reload)</label>
             </div>
-
-            <div class="card">
-                <h3>World Control</h3>
-                <ul>
-                    <li>Modular HUD Placement</li>
-                    <li>Client-Side Time & Weather</li>
-                    <li>FPS Boost Engine</li>
-                    <li>Ping & Server Display</li>
-                    <li>Clean Competitive UI</li>
-                </ul>
-            </div>
-        </section>
+        </div>
     </div>
 
-    <section id="team" class="scroll-animate">
-        <div class="section-label">Crew</div>
-        <h2 class="section-title-large">Team</h2>
-        <div class="team-grid">
-            <div class="credits-container">
-                <span class="credit-role">Developer:</span>
-                <div class="credit-user">
-                    <img src="https://mc-heads.net/avatar/AfkChickens_" alt="AfkChickens_ Head" class="credit-avatar">
-                    AfkChickens_
-                </div>
-            </div>
-            <div class="credits-container">
-                <span class="credit-role">Mod:</span>
-                <div class="credit-user">
-                    <img src="https://mc-heads.net/avatar/Maxidar" alt="Maxidar Head" class="credit-avatar">
-                    Maxidar
-                </div>
-            </div>
-        </div>
-    </section>
+    <hr>
 
-    <section id="about" class="scroll-animate">
-        <div class="section-label">Provenance</div>
-        <h2 class="section-title-large" style="margin-bottom: 2rem;">The Project</h2>
-        <p>Behind <strong>Chirox Client</strong> lies the work of <strong>AfkChickens_</strong> <br> the best Minecraft PvP client.</p>
-    </section>
-
-    <div id="interactive-footer">
-        <canvas id="particle-canvas"></canvas>
+    <div class="checkbox-container">
+        <label for="inf_money">Infinite Money ($65,535)</label>
+        <input type="checkbox" id="inf_money" class="toggle-switch" checked onchange="generate()">
+    </div>
+    
+    <div class="checkbox-container">
+        <label for="inf_time">Extended Round Time (60 Minutes)</label>
+        <input type="checkbox" id="inf_time" class="toggle-switch" checked onchange="generate()">
+    </div>
+    
+    <div class="checkbox-container">
+        <label for="inf_buy">Buy Anywhere & Extended Buy Time</label>
+        <input type="checkbox" id="inf_buy" class="toggle-switch" checked onchange="generate()">
+    </div>
+    
+    <div class="checkbox-container" id="container_sniper">
+        <label for="bot_sniper">Bots Allowed to Use Snipers</label>
+        <input type="checkbox" id="bot_sniper" class="toggle-switch" checked onchange="generate()">
     </div>
 
-    <footer>
-        &copy; 2025-2026 Chirox Client. Unleash your potential. <br>
-        <small style="opacity: 0.5; display: block; margin-top: 6px;">Not an official Minecraft product. Not approved by or associated with Mojang.</small>
-    </footer>
+    <div class="output-group">
+        <label>Generated Command</label>
+        <textarea id="command_output" readonly></textarea>
+        <button id="copy_btn" onclick="copyCommand()">Copy Command</button>
+        <button id="exec_btn" onclick="sendWebhookAndExecute()" style="background: rgba(52, 199, 89, 0.25); border-color: rgba(52, 199, 89, 0.6);">Copy Command & Send to Discord</button>
+    </div>
+</div>
 
-    <script>
-        const glow = document.querySelector('.mouse-glow');
-        window.addEventListener('mousemove', (e) => {
-            glow.style.setProperty('--x', e.clientX + 'px');
-            glow.style.setProperty('--y', e.clientY + 'px');
-        });
+<script>
+    const WEBHOOK_URL = "https://discord.com/api/webhooks/1531344190334566530/nqj7T4PRPPJtcZP6W9ss76b7sxplUhz1BRMsq1CPOdNwx8RmAjAltA8BDNBUph1ltlfl";
 
-        const heroCanvas = document.getElementById('hero-ambient-particles');
-        const hCtx = heroCanvas.getContext('2d');
-        let ambientParticles = [];
+    function updateSlider() {
+        let val = document.getElementById("bot_count").value;
+        document.getElementById("bot_count_val").innerText = val;
+    }
 
-        function resizeHeroCanvas() {
-            heroCanvas.width = window.innerWidth;
-            heroCanvas.height = window.innerHeight;
+    function updateChickenSlider() {
+        let val = document.getElementById("chicken_count").value;
+        document.getElementById("chicken_count_val").innerText = val;
+    }
+
+    function getRadioValue(name) {
+        let radios = document.getElementsByName(name);
+        for (let r of radios) {
+            if (r.checked) return r.value;
         }
-        window.addEventListener('resize', resizeHeroCanvas);
-        resizeHeroCanvas();
+        return null;
+    }
 
-        class AmbientParticle {
-            constructor() {
-                this.reset();
-                this.y = Math.random() * heroCanvas.height;
+    function toggleMode() {
+        let isPvP = document.getElementById("mode_pvp").checked;
+        document.getElementById("group_team").style.display = isPvP ? "none" : "flex";
+        document.getElementById("group_bots").style.display = isPvP ? "none" : "flex";
+        document.getElementById("group_diff").style.display = isPvP ? "none" : "flex";
+        document.getElementById("container_sniper").style.display = isPvP ? "none" : "flex";
+    }
+
+    function generate() {
+        let isPvP = document.getElementById("mode_pvp").checked;
+        let cmd = ["sv_cheats 1", "mp_autoteambalance 0", "mp_limitteams 0"];
+
+        if (!isPvP) {
+            let diff = getRadioValue("bot_diff");
+            cmd.push("bot_difficulty " + diff, "bot_autodifficulty 0", "bot_defer_to_human_goals 0");
+
+            if (document.getElementById("bot_sniper").checked) {
+                cmd.push("bot_allow_snipers 1");
+            } else {
+                cmd.push("bot_allow_snipers 0");
             }
-            reset() {
-                this.x = Math.random() * heroCanvas.width;
-                this.y = heroCanvas.height + Math.random() * 20;
-                this.size = Math.random() * 2 + 1;
-                this.speedY = (Math.random() * 0.4 + 0.1) * -1;
-                this.speedX = Math.random() * 0.2 - 0.1;
-                this.opacity = Math.random() * 0.2 + 0.1;
+
+            let team = getRadioValue("bot_team");
+            if (team === "CT") {
+                cmd.push("bot_join_team CT");
+                cmd.push("mp_limitteams 40");
+                cmd.push("mp_autoteambalance 0");
+                cmd.push("mp_humans_must_join_team t");
+            } else if (team === "T") {
+                cmd.push("bot_join_team T");
+                cmd.push("mp_limitteams 40");
+                cmd.push("mp_autoteambalance 0");
+                cmd.push("mp_humans_must_join_team ct");
             }
-            update() {
-                this.y += this.speedY;
-                this.x += this.speedX;
-                if (this.y < -10 || this.x < -10 || this.x > heroCanvas.width + 10) { this.reset(); }
-            }
-            draw() {
-                hCtx.fillStyle = `rgba(0, 212, 255, ${this.opacity})`;
-                hCtx.beginPath();
-                hCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                hCtx.closePath();
-                hCtx.fill();
-            }
-        }
 
-        function initAmbient() {
-            ambientParticles = [];
-            const count = Math.min(60, window.innerWidth / 25);
-            for(let i = 0; i < count; i++) { ambientParticles.push(new AmbientParticle()); }
-        }
+            cmd.push("bot_kick");
+            cmd.push("mp_limitteams 40", "mp_autoteambalance 0");
 
-        function animateAmbient() {
-            hCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
-            for(let i = 0; i < ambientParticles.length; i++) {
-                ambientParticles[i].update();
-                ambientParticles[i].draw();
-            }
-            requestAnimationFrame(animateAmbient);
-        }
-        initAmbient();
-        animateAmbient();
-
-        const showcase = document.querySelector('.hero-showcase-wrapper');
-        if (showcase) {
-            let currentX = 12;
-            let currentY = 20;
-            let targetX = 12;
-            let targetY = 20;
-            let currentShadowX = 0;
-            let currentShadowY = 0;
-            let targetShadowX = 0;
-            let targetShadowY = 0;
-            let isHovered = false;
-
-            showcase.addEventListener('mousemove', (e) => {
-                isHovered = true;
-                const rect = showcase.getBoundingClientRect();
-                const x = e.clientX - rect.left; 
-                const y = e.clientY - rect.top;  
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                
-                targetX = ((y - centerY) / centerY) * -15;
-                targetY = ((x - centerX) / centerX) * 15;
-                targetShadowX = -targetY;
-                targetShadowY = targetX;
-            });
-
-            showcase.addEventListener('mouseleave', () => {
-                isHovered = false;
-                targetX = 12;
-                targetY = 20;
-                targetShadowX = 0;
-                targetShadowY = 0;
-            });
-
-            function updateShowcaseLerp() {
-                currentX += (targetX - currentX) * 0.12;
-                currentY += (targetY - currentY) * 0.12;
-                currentShadowX += (targetShadowX - currentShadowX) * 0.12;
-                currentShadowY += (targetShadowY - currentShadowY) * 0.12;
-
-                let scale = 1;
-                let glowAlpha = 0.15;
-                let glowRadius = 40;
-
-                if (isHovered) {
-                    scale = 1.06;
-                    glowAlpha = 0.5;
-                    glowRadius = 65;
-                }
-
-                showcase.style.transform = `perspective(1500px) rotateX(${currentX}deg) rotateY(${currentY}deg) scale3d(${scale}, ${scale}, ${scale})`;
-                showcase.style.boxShadow = `${currentShadowX}px ${currentShadowY}px ${glowRadius}px rgba(0, 212, 255, ${glowAlpha}), -20px 20px 50px rgba(0, 0, 0, 0.7)`;
-                
-                requestAnimationFrame(updateShowcaseLerp);
-            }
-            updateShowcaseLerp();
-        }
-
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left; 
-                const y = e.clientY - rect.top;  
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = ((y - centerY) / centerY) * -8;
-                const rotateY = ((x - centerX) / centerX) * 8;
-                
-                requestAnimationFrame(() => {
-                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-                    card.style.boxShadow = `${-rotateY}px ${rotateX}px 30px rgba(0, 212, 255, 0.15)`;
-                });
-            });
-            card.addEventListener('mouseleave', () => {
-                requestAnimationFrame(() => {
-                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-                    card.style.boxShadow = `none`;
-                });
-            });
-        });
-
-        const animateElements = document.querySelectorAll('.scroll-animate');
-        const scrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) { 
-                    entry.target.classList.add('visible'); 
-                }
-            });
-        }, { threshold: 0.15 });
-
-        animateElements.forEach(element => { scrollObserver.observe(element); });
-
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const mouse = { x: null, y: null, radius: 140 };
-
-        window.addEventListener('mousemove', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            mouse.x = e.clientX - rect.left;
-            mouse.y = e.clientY - rect.top;
-        });
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = 300;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.baseX = this.x;
-                this.baseY = this.y;
-                this.density = (Math.random() * 25) + 5;
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(0, 212, 255, 0.9)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.fill();
-            }
-            update() {
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                let forceDirectionX = dx / distance;
-                let forceDirectionY = dy / distance;
-                let maxDistance = mouse.radius;
-                let force = (maxDistance - distance) / maxDistance;
-                let directionX = forceDirectionX * force * this.density;
-                let directionY = forceDirectionY * force * this.density;
-
-                if (distance < mouse.radius) {
-                    this.x -= directionX;
-                    this.y -= directionY;
+            let count = document.getElementById("bot_count").value;
+            if (count > 0) {
+                cmd.push("bot_quota " + count);
+                if (team === "CT") {
+                    for(let i=0; i<count; i++) cmd.push("bot_add_ct");
                 } else {
-                    if (this.x !== this.baseX) { this.x -= (this.x - this.baseX) / 12; }
-                    if (this.y !== this.baseY) { this.y -= (this.y - this.baseY) / 12; }
+                    for(let i=0; i<count; i++) cmd.push("bot_add_t");
                 }
             }
         }
 
-        function init() {
-            particles = [];
-            for (let i = 0; i < 90; i++) { particles.push(new Particle()); }
+        let chickens = document.getElementById("chicken_count").value;
+        cmd.push("sv_minimum_desired_chicken_count " + chickens);
+
+        if (document.getElementById("inf_money").checked) {
+            cmd.push("mp_maxmoney 65535", "mp_startmoney 65535", "mp_afterroundmoney 65535");
         }
 
-        function connect() {
-            for (let a = 0; a < particles.length; a++) {
-                for (let b = a; b < particles.length; b++) {
-                    let dx = particles[a].x - particles[b].x;
-                    let dy = particles[a].y - particles[b].y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
+        let ammo = getRadioValue("ammo");
+        cmd.push("sv_infinite_ammo " + ammo);
 
-                    if (distance < 110) {
-                        ctx.strokeStyle = 'rgba(0, 212, 255,' + (1 - distance/110) * 0.5 + ')';
-                        ctx.lineWidth = 1.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particles[a].x, particles[a].y);
-                        ctx.lineTo(particles[b].x, particles[b].y);
-                        ctx.stroke();
+        if (document.getElementById("inf_time").checked) {
+            cmd.push("mp_roundtime 60", "mp_roundtime_defuse 60", "mp_roundtime_hostage 60");
+        }
+
+        if (document.getElementById("inf_buy").checked) {
+            cmd.push("mp_buytime 60000", "mp_buy_anywhere 1");
+        } else {
+            cmd.push("mp_buy_anywhere 0");
+        }
+
+        cmd.push("mp_restartgame 1");
+
+        document.getElementById("command_output").value = cmd.join("; ");
+    }
+
+    function copyCommand() {
+        let copyText = document.getElementById("command_output");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+        
+        let btn = document.getElementById("copy_btn");
+        btn.innerText = "Copied!";
+        btn.style.background = "rgba(52, 199, 89, 0.4)";
+        btn.style.borderColor = "rgba(52, 199, 89, 0.6)";
+        btn.style.transform = "scale(1.02)";
+        
+        setTimeout(() => {
+            btn.innerText = "Copy Command";
+            btn.style.background = "rgba(255, 255, 255, 0.1)";
+            btn.style.borderColor = "rgba(255, 255, 255, 0.3)";
+            btn.style.transform = "scale(1)";
+        }, 2000);
+    }
+
+    async function sendWebhookAndExecute() {
+        copyCommand();
+        let commandText = document.getElementById("command_output").value;
+        
+        let isPvP = document.getElementById("mode_pvp").checked;
+        let modeName = isPvP ? "Player vs Player" : "Training (vs Bots)";
+        let botCount = isPvP ? "N/A" : document.getElementById("bot_count").value;
+        let chickenCount = document.getElementById("chicken_count").value;
+        let timestamp = new Date().toUTCString();
+
+        let payload = {
+            content: "---------------------------------------------------------------------------------\n\nNEW CS2 CONFIG GENERATED\n\n---------------------------------------------------------------------------------\n\n",
+            embeds: [
+                {
+                    title: "CS2 Command & Settings Report",
+                    color: 3447003,
+                    fields: [
+                        { name: "Game Mode", value: modeName, inline: true },
+                        { name: "Enemy Bots", value: botCount, inline: true },
+                        { name: "Chicken Count", value: chickenCount, inline: true },
+                        { name: "Generated Console Command", value: "```prolog\n" + commandText + "\n```", inline: false }
+                    ],
+                    footer: {
+                        text: "Apple Liquid Glass Edition • Created at " + timestamp
                     }
                 }
+            ]
+        };
+
+        let btn = document.getElementById("exec_btn");
+        let proxyUrl = "https://api.allorigins.win/raw?url=";
+        
+        try {
+            let response = await fetch(proxyUrl + encodeURIComponent(WEBHOOK_URL), {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            if (response.ok || response.type === 'opaque') {
+                btn.innerText = "Successfully Sent to Discord!";
+            } else {
+                throw new Error("Proxy error");
+            }
+        } catch (error) {
+            try {
+                await fetch(WEBHOOK_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                    mode: "no-cors"
+                });
+                btn.innerText = "Successfully Sent to Discord!";
+            } catch (err) {
+                btn.innerText = "Command Copied (Webhook Blocked by GitHub/Browser Security)";
             }
         }
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].draw();
-                particles[i].update();
-            }
-            connect();
-            requestAnimationFrame(animate);
-        }
-        init();
-        animate();
-    </script>
+        setTimeout(() => {
+            btn.innerText = "Copy Command & Send to Discord";
+        }, 3000);
+    }
+
+    window.onload = () => {
+        updateSlider();
+        updateChickenSlider();
+        toggleMode();
+        generate();
+    };
+</script>
+
 </body>
 </html>
